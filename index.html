@@ -225,8 +225,58 @@
         .hero p {
             font-size: 15px;
             color: var(--text-secondary);
-            margin-bottom: 0;
+            margin-bottom: 10px;
             line-height: 1.4;
+        }
+        
+        .bonus-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            color: #000;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 10px;
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .app-stores {
+            text-align: center;
+            margin-top: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .app-stores span {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        
+        .store-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .store-badge {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .cta-bottom {
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         /* Trust Badge */
@@ -328,6 +378,12 @@
             margin-bottom: 10px;
             position: relative;
             overflow: hidden;
+        }
+        
+        .game-image img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain !important;
         }
 
         .dice-dreams-img {
@@ -516,7 +572,12 @@
             }
 
             .game-card h3 {
-                font-size: 16px;
+                font-size: 13px;
+            }
+            
+            .game-image img {
+                width: 50px;
+                height: 50px;
             }
 
             .earn-text {
@@ -633,7 +694,8 @@
 
         <section class="hero">
             <h1>Get Paid to Play<br>Your Favorite Games!</h1>
-            <p>Turn your game time into real money. Join thousands earning daily rewards.</p>
+            <p>Download the free app and start earning real cash today.</p>
+            <div class="bonus-badge">🎁 Get $5 Bonus on Sign Up!</div>
         </section>
 
         <section class="games-section">
@@ -641,7 +703,7 @@
                 <div class="game-card">
                     <div class="game-artwork">
                         <div class="game-image dice-dreams-img">
-                            <div class="dice-game-icon">🎲</div>
+                            <img src="images/dice_dreams.jpg" alt="Dice Dreams">
                         </div>
                     </div>
                     <h3>Dice Dreams</h3>
@@ -652,10 +714,10 @@
                 <div class="game-card">
                     <div class="game-artwork">
                         <div class="game-image domino-img">
-                            <div class="domino-icon">🐱</div>
+                            <img src="images/domino_dreams.png" alt="Domino Dreams">
                         </div>
                     </div>
-                    <h3>Domino Dreams</h3>
+                    <h3 style="font-size: 12px;">Domino Dreams</h3>
                     <p class="earn-text">Earn up to</p>
                     <div class="game-amount">$212</div>
                 </div>
@@ -663,7 +725,7 @@
                 <div class="game-card">
                     <div class="game-artwork">
                         <div class="game-image solitaire-img">
-                            <div class="solitaire-icon">🃏</div>
+                            <img src="images/solitaire_cash.png" alt="Solitaire Cash">
                         </div>
                     </div>
                     <h3>Solitaire Cash</h3>
@@ -674,36 +736,48 @@
         </section>
 
         <a href="https://glctrk.org/aff_c?offer_id=2691&aff_id=167172" class="cta-button" onclick="trackCTAClick()">
-            Start Earning Now! →
+            📲 Download Free App
         </a>
+        
+        <div class="app-stores">
+            <span>Available on</span>
+            <div class="store-badges">
+                <span class="store-badge">🍎 iOS</span>
+                <span class="store-badge">🤖 Android</span>
+            </div>
+        </div>
 
         <section class="steps-section">
-            <h2>How to Get Started</h2>
+            <h2>Start Earning in 3 Easy Steps</h2>
             
             <div class="step">
-                <div class="step-icon">📱</div>
+                <div class="step-icon">📲</div>
                 <div class="step-content">
-                    <h3>Download the app</h3>
-                    <p>Available on iOS & Android</p>
+                    <h3>1. Download the free app</h3>
+                    <p>Takes less than 1 minute</p>
                 </div>
             </div>
 
             <div class="step">
-                <div class="step-icon">👤</div>
+                <div class="step-icon">✅</div>
                 <div class="step-content">
-                    <h3>Create your account</h3>
-                    <p>Sign up in under 30 seconds</p>
+                    <h3>2. Sign up & get $5 bonus</h3>
+                    <p>Just email + password, that's it</p>
                 </div>
             </div>
 
             <div class="step">
                 <div class="step-icon">💰</div>
                 <div class="step-content">
-                    <h3>Start playing & earning</h3>
-                    <p>Get paid for every game you play</p>
+                    <h3>3. Play games & cash out</h3>
+                    <p>Withdraw anytime via PayPal</p>
                 </div>
             </div>
         </section>
+        
+        <a href="https://glctrk.org/aff_c?offer_id=2691&aff_id=167172" class="cta-button cta-bottom" onclick="trackCTAClick()">
+            📲 Download Free App
+        </a>
 
         <div class="features">
             <div class="feature-tag">
