@@ -39,6 +39,7 @@
             --text-secondary: #b8a9d9;
             --text-tertiary: #7a6b99;
             --border-color: #3d2a5f;
+            --trustpilot-green: #00b67a;
         }
 
         body {
@@ -290,27 +291,12 @@
             background: linear-gradient(135deg, #4A90E2 0%, #7B68EE 100%);
         }
 
-        .dice-game-icon {
-            font-size: 72px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-        }
-
         .domino-img {
             background: linear-gradient(135deg, #50C9FF 0%, #7B68EE 100%);
         }
 
-        .domino-icon {
-            font-size: 72px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-        }
-
         .solitaire-img {
             background: linear-gradient(135deg, #FF6B9D 0%, #C239B3 100%);
-        }
-
-        .solitaire-icon {
-            font-size: 72px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
         .game-card h3 {
@@ -335,6 +321,172 @@
             font-weight: 800;
             color: var(--accent-gold);
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            margin: 20px 0;
+        }
+
+        .reviews-header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .reviews-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .trustpilot-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .trustpilot-logo .tp-stars {
+            display: inline-flex;
+            gap: 2px;
+        }
+
+        .trustpilot-logo .tp-star {
+            width: 20px;
+            height: 20px;
+            background: var(--trustpilot-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+        }
+
+        .review-carousel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .review-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .review-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reviewer-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+        }
+
+        .reviewer-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .reviewer-details h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .reviewer-details span {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .review-stars {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 12px;
+        }
+
+        .review-stars span {
+            width: 24px;
+            height: 24px;
+            background: var(--trustpilot-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+        }
+
+        .review-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .review-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .review-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .review-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .review-dot.active {
+            background: var(--trustpilot-green);
+            width: 24px;
+            border-radius: 4px;
         }
 
         /* Steps Section */
@@ -488,15 +640,6 @@
                 font-size: 28px;
             }
 
-            .coin-emoji {
-                font-size: 24px;
-            }
-
-            .play-button {
-                padding: 10px;
-                font-size: 14px;
-            }
-
             .steps-section {
                 padding: 20px 16px;
             }
@@ -521,18 +664,6 @@
             }
 
             .step-content p {
-                font-size: 12px;
-            }
-
-            .pro-tip {
-                padding: 14px;
-            }
-
-            .pro-tip-header {
-                font-size: 12px;
-            }
-
-            .pro-tip p {
                 font-size: 12px;
             }
 
@@ -566,6 +697,28 @@
 
             .rating {
                 font-size: 11px;
+            }
+
+            .review-card {
+                padding: 16px;
+            }
+
+            .reviewer-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .reviewer-details h4 {
+                font-size: 14px;
+            }
+
+            .review-title {
+                font-size: 14px;
+            }
+
+            .review-text {
+                font-size: 13px;
             }
         }
 
@@ -639,6 +792,149 @@
                 <span class="store-badge">🤖 Android</span>
             </div>
         </div>
+
+        <!-- Reviews Section -->
+        <section class="reviews-section">
+            <div class="reviews-header">
+                <h2>What Players Say</h2>
+                <div class="trustpilot-logo">
+                    <span>Excellent on</span>
+                    <div class="tp-stars">
+                        <span class="tp-star">★</span>
+                        <span class="tp-star">★</span>
+                        <span class="tp-star">★</span>
+                        <span class="tp-star">★</span>
+                        <span class="tp-star">★</span>
+                    </div>
+                    <span>Trustpilot</span>
+                </div>
+            </div>
+
+            <div class="review-carousel">
+                <!-- Review 1 -->
+                <div class="review-card active" data-review="0">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">MB</div>
+                            <div class="reviewer-details">
+                                <h4>Melissa Burks</h4>
+                                <span>US · 3 reviews</span>
+                            </div>
+                        </div>
+                        <span class="review-date">14 hours ago</span>
+                    </div>
+                    <div class="review-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <div class="review-title">Not a scam! Great support team!</div>
+                    <p class="review-text">I've used similar apps before and Playful is hands down the best. There have been a couple of glitches with cash outs but the team responds right away when I contact them and I've made more than $400 since downloading the app!</p>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="review-card" data-review="1">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">HE</div>
+                            <div class="reviewer-details">
+                                <h4>Helen</h4>
+                                <span>GB · 3 reviews</span>
+                            </div>
+                        </div>
+                        <span class="review-date">A day ago</span>
+                    </div>
+                    <div class="review-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <div class="review-title">It's fun and you earn real cash!</div>
+                    <p class="review-text">It's fun and you earn real cash no crap cool Game</p>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="review-card" data-review="2">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">BR</div>
+                            <div class="reviewer-details">
+                                <h4>Brooke</h4>
+                                <span>US · 2 reviews</span>
+                            </div>
+                        </div>
+                        <span class="review-date">2 days ago</span>
+                    </div>
+                    <div class="review-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <div class="review-title">Amazing... quick and great customer service</div>
+                    <p class="review-text">I was verified and approved in minutes and had my gift card for $50 within a few hours. Customer service... a real person too actually got back with me in minutes. I love this site.</p>
+                </div>
+
+                <!-- Review 4 -->
+                <div class="review-card" data-review="3">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">CU</div>
+                            <div class="reviewer-details">
+                                <h4>Customer</h4>
+                                <span>US · 1 review</span>
+                            </div>
+                        </div>
+                        <span class="review-date">2 days ago</span>
+                    </div>
+                    <div class="review-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <div class="review-title">This app is amazing !!!</div>
+                    <p class="review-text">This app is amazing !!!</p>
+                </div>
+
+                <!-- Review 5 -->
+                <div class="review-card" data-review="4">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">LR</div>
+                            <div class="reviewer-details">
+                                <h4>Lindsay Roush</h4>
+                                <span>US · 1 review</span>
+                            </div>
+                        </div>
+                        <span class="review-date">3 days ago</span>
+                    </div>
+                    <div class="review-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <div class="review-title">My "Playful Rewards" just rewarded me better than any other game app!!</div>
+                    <p class="review-text">I'm excited to say I'm truly impressed with this app. It's worth it to see you get rewarded for all the time and patience we go thru to play really fun and time consuming games. Thank you Playful!</p>
+                </div>
+
+                <!-- Review 6 -->
+                <div class="review-card" data-review="5">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">NR</div>
+                            <div class="reviewer-details">
+                                <h4>Nikki Reavis</h4>
+                                <span>US · 1 review</span>
+                            </div>
+                        </div>
+                        <span class="review-date">3 days ago</span>
+                    </div>
+                    <div class="review-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <div class="review-title">They did pay out and in a timely manner</div>
+                    <p class="review-text">They did pay out and in a timely manner</p>
+                </div>
+            </div>
+
+            <div class="review-dots">
+                <span class="review-dot active" data-dot="0"></span>
+                <span class="review-dot" data-dot="1"></span>
+                <span class="review-dot" data-dot="2"></span>
+                <span class="review-dot" data-dot="3"></span>
+                <span class="review-dot" data-dot="4"></span>
+                <span class="review-dot" data-dot="5"></span>
+            </div>
+        </section>
 
         <section class="steps-section">
             <h2>Start Earning in 3 Easy Steps</h2>
@@ -729,6 +1025,32 @@
         }
 
         createFloatingCoins();
+
+        // Review Carousel
+        let currentReview = 0;
+        const reviews = document.querySelectorAll('.review-card');
+        const dots = document.querySelectorAll('.review-dot');
+        const totalReviews = reviews.length;
+
+        function showReview(index) {
+            reviews.forEach(r => r.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            
+            reviews[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentReview = index;
+        }
+
+        // Auto-rotate every 5 seconds
+        setInterval(() => {
+            let next = (currentReview + 1) % totalReviews;
+            showReview(next);
+        }, 5000);
+
+        // Click on dots to navigate
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => showReview(index));
+        });
     </script>
 </body>
 </html>
