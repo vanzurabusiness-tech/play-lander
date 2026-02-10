@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Unlock Rewards</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7V6NWBSEVK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7V6NWBSEVK');
+      
+      gtag('event', 'swipe_gate_view', {
+        'event_category': 'funnel',
+        'event_label': 'swipe_gate'
+      });
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0514;
+            --bg-secondary: #1a0f2e;
+            --accent-purple: #6b46ff;
+            --accent-gold: #ffd700;
+            --text-primary: #ffffff;
+            --text-secondary: #b8a9d9;
+            --border-color: #3d2a5f;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Swipe Gate */
+        #swipe-gate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+        }
+
+        #swipe-gate.unlocked {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .swipe-content {
+            text-align: center;
+            width: 100%;
+            max-width: 340px;
+        }
+
+        .swipe-icon {
+            font-size: 48px;
+            margin-bottom: 24px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .swipe-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .swipe-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        /* Swipe Slider */
+        .swipe-container {
+            width: 100%;
+            height: 64px;
+            background: var(--bg-secondary);
+            border-radius: 32px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            touch-action: pan-x;
+            user-select: none;
+        }
+
+        .swipe-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-purple), #5537d9);
+            border-radius: 30px;
+            width: 60px;
+            transition: width 0.1s ease;
+        }
+
+        .swipe-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            pointer-events: none;
+            white-space: nowrap;
+            transition: opacity 0.3s ease;
+        }
+
+        .swipe-handle {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-purple), #5537d9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(107, 70, 255, 0.4);
+            z-index: 10;
+        }
+
+        .swipe-handle:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+        }
+
+        .swipe-handle svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .swipe-arrows {
+            display: flex;
+            gap: 2px;
+        }
+
+        .swipe-arrows span {
+            font-size: 18px;
+            color: white;
+            opacity: 0.9;
+        }
+
+        /* Pulsing hint animation */
+        .swipe-hint {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent-purple);
+            animation: pulse-hint 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-hint {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% { 
+                transform: scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* Success state */
+        .swipe-container.success .swipe-track {
+            width: 100% !important;
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+        }
+
+        .swipe-container.success .swipe-handle {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            left: calc(100% - 60px) !important;
+        }
+
+        .swipe-container.success .swipe-text {
+            color: white;
+        }
+
+        .swipe-container.success .swipe-hint {
+            display: none;
+        }
+
+        /* Lander iframe container */
+        #lander-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #lander-container.visible {
+            opacity: 1;
+        }
+
+        #lander-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Error shake animation */
+        .swipe-container.shake {
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* Instructions below slider */
+        .swipe-instruction {
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- Swipe Gate -->
+    <div id="swipe-gate">
+        <div class="swipe-content">
+            <div class="swipe-icon">🎮</div>
+            <h1 class="swipe-title">Your Rewards Await</h1>
+            <p class="swipe-subtitle">Swipe to unlock exclusive offers</p>
+            
+            <div class="swipe-container" id="swipe-container">
+                <div class="swipe-hint"></div>
+                <div class="swipe-track" id="swipe-track"></div>
+                <div class="swipe-text" id="swipe-text">Swipe to continue →</div>
+                <div class="swipe-handle" id="swipe-handle">
+                    <div class="swipe-arrows">
+                        <span>›</span>
+                        <span>›</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="swipe-instruction">Drag the slider to the right</p>
+        </div>
+    </div>
+
+    <!-- Lander Container -->
+    <div id="lander-container">
+        <iframe id="lander-frame" src="lander.html"></iframe>
+    </div>
+
+    <script>
+        const swipeContainer = document.getElementById('swipe-container');
+        const swipeHandle = document.getElementById('swipe-handle');
+        const swipeTrack = document.getElementById('swipe-track');
+        const swipeText = document.getElementById('swipe-text');
+        const swipeGate = document.getElementById('swipe-gate');
+        const landerContainer = document.getElementById('lander-container');
+        
+        let isDragging = false;
+        let startX = 0;
+        let currentX = 0;
+        let handleStartX = 4;
+        let maxX = swipeContainer.offsetWidth - 60;
+        const threshold = 0.85;
+        
+        let hasMoved = false;
+
+        function getEventX(e) {
+            return e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        }
+
+        function startDrag(e) {
+            e.preventDefault();
+            isDragging = true;
+            hasMoved = false;
+            startX = getEventX(e);
+            swipeHandle.style.transition = 'none';
+            swipeTrack.style.transition = 'none';
+        }
+
+        function doDrag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            const x = getEventX(e);
+            const diff = x - startX;
+            
+            if (Math.abs(diff) > 10) {
+                hasMoved = true;
+            }
+            
+            currentX = Math.max(0, Math.min(diff, maxX - handleStartX));
+            
+            swipeHandle.style.left = (handleStartX + currentX) + 'px';
+            swipeTrack.style.width = (60 + currentX) + 'px';
+            
+            const progress = currentX / (maxX - handleStartX);
+            swipeText.style.opacity = 1 - progress;
+        }
+
+        function endDrag(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            swipeHandle.style.transition = 'left 0.3s ease, transform 0.1s ease';
+            swipeTrack.style.transition = 'width 0.3s ease';
+            
+            const progress = currentX / (maxX - handleStartX);
+            
+            if (hasMoved && progress >= threshold) {
+                unlockSuccess();
+            } else if (!hasMoved) {
+                swipeContainer.classList.add('shake');
+                setTimeout(() => swipeContainer.classList.remove('shake'), 500);
+                resetHandle();
+            } else {
+                resetHandle();
+            }
+        }
+
+        function resetHandle() {
+            currentX = 0;
+            swipeHandle.style.left = handleStartX + 'px';
+            swipeTrack.style.width = '60px';
+            swipeText.style.opacity = 1;
+        }
+
+        function unlockSuccess() {
+            swipeContainer.classList.add('success');
+            swipeText.textContent = '✓ Unlocked!';
+            swipeText.style.opacity = 1;
+            
+            gtag('event', 'swipe_success', {
+                'event_category': 'funnel',
+                'event_label': 'swipe_unlocked'
+            });
+            
+            setTimeout(() => {
+                swipeGate.classList.add('unlocked');
+                landerContainer.classList.add('visible');
+                document.body.style.overflow = 'auto';
+            }, 500);
+        }
+
+        // Mouse events
+        swipeHandle.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', doDrag);
+        document.addEventListener('mouseup', endDrag);
+
+        // Touch events
+        swipeHandle.addEventListener('touchstart', startDrag, { passive: false });
+        document.addEventListener('touchmove', doDrag, { passive: false });
+        document.addEventListener('touchend', endDrag);
+
+        swipeContainer.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+
+        window.addEventListener('resize', () => {
+            maxX = swipeContainer.offsetWidth - 60;
+        });
+    </script>
+</body>
+</html>
