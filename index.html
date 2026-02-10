@@ -1013,7 +1013,8 @@
                 coin.classList.add('floating-coin');
                 coin.style.left = Math.random() * 100 + '%';
                 coin.style.animationDuration = (Math.random() * 15 + 15) + 's';
-                coin.style.animationDelay = Math.random() * 5 + 's';
+                // Random negative delay to make coins appear mid-animation
+                coin.style.animationDelay = -(Math.random() * 30) + 's';
                 coin.style.width = (Math.random() * 10 + 15) + 'px';
                 coin.style.height = coin.style.width;
                 coinsContainer.appendChild(coin);
