@@ -53,11 +53,17 @@
         }
 
         .container {
-            max-width: 420px;
+            max-width: 480px;
             margin: 0 auto;
             padding: 0 20px;
             position: relative;
             z-index: 1;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 420px;
+            }
         }
 
         /* Bonus Expires Top Banner */
@@ -192,6 +198,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            text-decoration: none;
         }
 
         .offer-card:hover {
@@ -216,16 +223,17 @@
 
         .hot-badge {
             position: absolute;
-            top: -6px;
-            right: -6px;
+            top: 8px;
+            left: 8px;
             background: linear-gradient(135deg, #f59e0b, #ef4444);
             color: white;
             font-size: 9px;
             font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
             text-transform: uppercase;
             box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            z-index: 10;
         }
 
         .offer-details {
@@ -585,11 +593,68 @@
             }
 
             .hero h1 {
-                font-size: 32px;
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .feature-pills {
+                gap: 8px;
+            }
+
+            .feature-pill {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+
+            .offer-icon {
+                width: 52px;
+                height: 52px;
+            }
+
+            .offer-name {
+                font-size: 15px;
+            }
+
+            .offer-task {
+                font-size: 12px;
+            }
+
+            .reward-amount {
+                font-size: 22px;
             }
 
             .steps-grid {
-                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .step-card {
+                padding: 16px 12px;
+            }
+
+            .step-number {
+                font-size: 24px;
+            }
+
+            .step-icon {
+                width: 44px;
+                height: 44px;
+            }
+
+            .step-title {
+                font-size: 13px;
+            }
+
+            .step-desc {
+                font-size: 11px;
+            }
+        }
+
+        @media (min-width: 481px) {
+            body {
+                background: linear-gradient(135deg, var(--bg-primary) 0%, #1a0f2e 100%);
             }
         }
     </style>
@@ -649,9 +714,9 @@
             <h2 class="section-title">Top Offers Right Now</h2>
             
             <a href="https://glctrk.org/aff_c?offer_id=2691&aff_id=167172" class="offer-card" onclick="trackCTAClick()">
+                <div class="hot-badge">HOT</div>
                 <div class="offer-icon">
                     <img src="images/dice_dreams.jpg" alt="Dice Dreams">
-                    <div class="hot-badge">HOT</div>
                 </div>
                 <div class="offer-details">
                     <div class="offer-name">Dice Dreams</div>
