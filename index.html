@@ -52,6 +52,41 @@
             min-height: 100vh;
         }
 
+        /* Floating Coins Background */
+        .floating-coin {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffa500 100%);
+            border-radius: 50%;
+            opacity: 0.08;
+            animation: float-bg linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .floating-coin::before {
+            content: '$';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 11px;
+            font-weight: 700;
+            color: #ff8c00;
+        }
+
+        @keyframes float-bg {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 0.08;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0.03;
+            }
+        }
+
         .container {
             max-width: 480px;
             margin: 0 auto;
@@ -95,8 +130,12 @@
 
         /* Header */
         header {
-            padding: 20px 0 12px;
+            padding: 16px 0 12px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
         .logo-img {
@@ -104,7 +143,6 @@
             height: 80px;
             border-radius: 20px;
             box-shadow: 0 8px 40px rgba(107, 70, 255, 0.4);
-            margin-bottom: 12px;
         }
 
         .trust-badge-top {
@@ -660,6 +698,9 @@
     </style>
 </head>
 <body>
+    <!-- Animated Floating Coins -->
+    <div class="floating-coins" aria-hidden="true"></div>
+
     <!-- Bonus Expires Top Banner -->
     <div class="bonus-expires-top">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -671,11 +712,11 @@
 
     <div class="container">
         <header>
-            <img src="images/playful.webp" alt="Playful Rewards" class="logo-img">
             <div class="trust-badge-top">
                 <span class="trust-icon">📈</span>
                 <span>Trusted by 50,000+ users</span>
             </div>
+            <img src="images/playful.webp" alt="Playful Rewards" class="logo-img">
         </header>
 
         <section class="hero">
@@ -962,6 +1003,25 @@
     </div>
 
     <script>
+        // Generate floating coins
+        function createFloatingCoins() {
+            const coinsContainer = document.querySelector('.floating-coins');
+            const coinCount = 15;
+            
+            for (let i = 0; i < coinCount; i++) {
+                const coin = document.createElement('div');
+                coin.classList.add('floating-coin');
+                coin.style.left = Math.random() * 100 + '%';
+                coin.style.animationDuration = (Math.random() * 15 + 15) + 's';
+                coin.style.animationDelay = Math.random() * 5 + 's';
+                coin.style.width = (Math.random() * 10 + 15) + 'px';
+                coin.style.height = coin.style.width;
+                coinsContainer.appendChild(coin);
+            }
+        }
+
+        createFloatingCoins();
+
         // Track CTA click
         function trackCTAClick() {
             gtag('event', 'cta_click', {
