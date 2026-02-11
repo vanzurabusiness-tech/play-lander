@@ -13,7 +13,7 @@
       
       gtag('event', 'swipe_gate_view', {
         'event_category': 'funnel',
-        'event_label': 'swipe_gate_vertical_up'
+        'event_label': 'swipe_gate_full_width'
       });
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +39,7 @@
         html, body {
             height: 100%;
             overflow: hidden;
-            touch-action: none; /* Crucial: Prevents browser scrolling */
+            touch-action: none; /* Locks browser scroll */
             user-select: none;
             -webkit-user-select: none;
         }
@@ -80,7 +80,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            /* Ensure content is above the touch zone slightly if needed, but zone is z-index top */
+            position: relative; 
+            pointer-events: none; /* Let clicks pass through to the Touch Zone */
         }
+
+        /* Re-enable pointer events for text if you want it selectable, but usually no */
+        .swipe-title, .swipe-subtitle { pointer-events: auto; }
 
         .swipe-icon {
             font-size: 56px;
@@ -107,7 +113,23 @@
             line-height: 1.4;
         }
 
-        /* --- VERTICAL SWIPE UP SLIDER --- */
+        /* --- THE INVISIBLE TOUCH ZONE (FULL WIDTH) --- */
+        #swipe-touch-zone {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%; /* Covers bottom 60% of screen */
+            z-index: 2000; /* Topmost layer */
+            cursor: grab;
+            /* background: rgba(255, 0, 0, 0.1);  Debug: Un-comment to see the zone */
+        }
+        
+        #swipe-touch-zone:active {
+            cursor: grabbing;
+        }
+
+        /* --- VISUAL SLIDER (CENTERED) --- */
         .swipe-container {
             width: 90px;
             height: 300px; 
@@ -115,36 +137,20 @@
             border-radius: 45px;
             position: relative;
             border: 2px solid var(--border-color);
-            touch-action: none;
-            user-select: none;
             box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            cursor: pointer;
             
-            /* The "Reaction" Logic */
+            /* Visual Reaction */
             transition: transform 0.1s ease, border-color 0.2s ease;
+            pointer-events: none; /* The Touch Zone handles events now */
         }
 
-        /* VISUAL REACTION: When they touch anywhere in the hit box */
-        .swipe-container:active {
-            transform: scale(0.98); /* Slight press effect */
-            border-color: var(--accent-purple); /* Glows purple */
+        /* Active State (Triggered by JS when touching zone) */
+        .swipe-container.active {
+            transform: scale(0.96); /* Shrinks slightly to show connection */
+            border-color: var(--accent-purple);
         }
 
-        /* === THE INVISIBLE GIANT HIT BOX === */
-        /* This extends the touch area 40px outside the visible slider */
-        .swipe-container::before {
-            content: '';
-            position: absolute;
-            top: -40px;
-            bottom: -40px;
-            left: -40px;
-            right: -40px;
-            background: transparent;
-            z-index: 100; /* Must be on top */
-            border-radius: 60px;
-        }
-
-        /* The moving track (fills from bottom) */
+        /* The moving track */
         .swipe-track {
             position: absolute;
             bottom: 0;
@@ -154,7 +160,6 @@
             background: linear-gradient(0deg, var(--accent-purple), #5537d9);
             border-radius: 45px;
             transition: height 0.1s ease;
-            pointer-events: none; /* Clicks pass through to container */
         }
 
         .swipe-text {
@@ -165,7 +170,6 @@
             font-size: 14px;
             font-weight: 700;
             color: var(--text-secondary);
-            pointer-events: none;
             white-space: nowrap;
             opacity: 0.6;
             letter-spacing: 3px;
@@ -185,11 +189,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: grab;
             transition: bottom 0.1s ease;
             box-shadow: 0 -4px 20px rgba(107, 70, 255, 0.5);
             z-index: 10;
-            pointer-events: none; /* Let the container handle the events! */
         }
 
         .swipe-arrows {
@@ -204,7 +206,7 @@
             color: white;
             opacity: 0.95;
             line-height: 0.6;
-            transform: rotate(-90deg); /* Point UP */
+            transform: rotate(-90deg);
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
@@ -218,7 +220,6 @@
             border-radius: 50%;
             background: var(--accent-purple);
             animation: pulse-hint 2s ease-in-out infinite;
-            pointer-events: none;
         }
 
         @keyframes pulse-hint {
@@ -288,6 +289,8 @@
 </head>
 <body>
     <div id="swipe-gate">
+        <div id="swipe-touch-zone"></div>
+
         <div class="swipe-content">
             <div class="swipe-icon">🎮</div>
             <h1 class="swipe-title">Your Rewards Await</h1>
@@ -319,7 +322,8 @@
             iframe.src = 'lander.html' + currentParams;
         }
 
-        // Logic for "Hit Box" Vertical Swipe
+        // Logic for FULL WIDTH Vertical Swipe
+        const touchZone = document.getElementById('swipe-touch-zone'); // We listen to THIS now
         const swipeContainer = document.getElementById('swipe-container');
         const swipeHandle = document.getElementById('swipe-handle');
         const swipeTrack = document.getElementById('swipe-track');
@@ -340,14 +344,17 @@
         }
 
         function startDrag(e) {
-            // Prevent default unless clicking a link
-            if (!e.target.closest('a')) e.preventDefault();
+            // Prevent default to stop scrolling
+            e.preventDefault();
             
             isDragging = true;
             hasMoved = false;
             
-            // Capture start position
+            // Capture start position (finger Y)
             startY = getEventY(e);
+            
+            // Add Visual Feedback class to the container
+            swipeContainer.classList.add('active');
             
             // Remove transitions for instant dragging
             swipeHandle.style.transition = 'none';
@@ -359,18 +366,16 @@
             e.preventDefault(); 
             
             const y = getEventY(e);
-            
-            // Logic: Calculate distance moved relative to start touch
-            const diff = startY - y;
+            const diff = startY - y; // How far UP did they move?
             
             if (Math.abs(diff) > 5) {
                 hasMoved = true;
             }
             
             // Constrain movement (0 to maxY)
-            // Even if they touch the top of the container, dragging UP increases 'diff'
             currentY = Math.max(0, Math.min(diff, maxY));
             
+            // Update CSS
             swipeHandle.style.bottom = (handleBottomY + currentY) + 'px';
             swipeTrack.style.height = (86 + currentY) + 'px';
             
@@ -382,6 +387,10 @@
             if (!isDragging) return;
             isDragging = false;
             
+            // Remove visual feedback
+            swipeContainer.classList.remove('active');
+            
+            // Restore smooth transition
             swipeHandle.style.transition = 'bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             swipeTrack.style.transition = 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             
@@ -412,7 +421,7 @@
             
             gtag('event', 'swipe_success', {
                 'event_category': 'funnel',
-                'event_label': 'swipe_vertical_up_unlocked'
+                'event_label': 'swipe_full_width_unlocked'
             });
             
             setTimeout(() => {
@@ -422,9 +431,9 @@
             }, 500);
         }
 
-        // Attach listeners to the container (which now includes the invisible 40px padding)
-        swipeContainer.addEventListener('mousedown', startDrag);
-        swipeContainer.addEventListener('touchstart', startDrag, { passive: false });
+        // Attach listeners to the INVISIBLE TOUCH ZONE (Full Width)
+        touchZone.addEventListener('mousedown', startDrag);
+        touchZone.addEventListener('touchstart', startDrag, { passive: false });
 
         document.addEventListener('mousemove', doDrag);
         document.addEventListener('mouseup', endDrag);
