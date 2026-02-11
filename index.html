@@ -40,6 +40,8 @@
             height: 100%;
             overflow: hidden;
             touch-action: none; /* Crucial: Prevents browser scrolling */
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
@@ -107,37 +109,59 @@
 
         /* --- VERTICAL SWIPE UP SLIDER --- */
         .swipe-container {
-            width: 90px;  /* WIDER container for easier touch */
-            height: 300px; /* Taller track for better swipe feel */
+            width: 90px;
+            height: 300px; 
             background: var(--bg-secondary);
             border-radius: 45px;
             position: relative;
-            overflow: visible; /* Changed to visible so touch area extends */
             border: 2px solid var(--border-color);
             touch-action: none;
             user-select: none;
             box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            cursor: pointer; /* Indicates interaction */
+            cursor: pointer;
+            
+            /* The "Reaction" Logic */
+            transition: transform 0.1s ease, border-color 0.2s ease;
+        }
+
+        /* VISUAL REACTION: When they touch anywhere in the hit box */
+        .swipe-container:active {
+            transform: scale(0.98); /* Slight press effect */
+            border-color: var(--accent-purple); /* Glows purple */
+        }
+
+        /* === THE INVISIBLE GIANT HIT BOX === */
+        /* This extends the touch area 40px outside the visible slider */
+        .swipe-container::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            bottom: -40px;
+            left: -40px;
+            right: -40px;
+            background: transparent;
+            z-index: 100; /* Must be on top */
+            border-radius: 60px;
         }
 
         /* The moving track (fills from bottom) */
         .swipe-track {
             position: absolute;
-            bottom: 0; /* Anchored to bottom */
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 86px; /* Matches handle height + padding */
-            background: linear-gradient(0deg, var(--accent-purple), #5537d9); /* Gradient UP */
+            height: 86px;
+            background: linear-gradient(0deg, var(--accent-purple), #5537d9);
             border-radius: 45px;
             transition: height 0.1s ease;
-            pointer-events: none; /* Let clicks pass through to container */
+            pointer-events: none; /* Clicks pass through to container */
         }
 
         .swipe-text {
             position: absolute;
-            top: 40%; /* Positioned near top */
+            top: 40%;
             left: 50%;
-            transform: translate(-50%, -50%) rotate(-90deg); /* Vertical Text reading UP */
+            transform: translate(-50%, -50%) rotate(-90deg);
             font-size: 14px;
             font-weight: 700;
             color: var(--text-secondary);
@@ -152,9 +176,9 @@
         /* The Button/Handle */
         .swipe-handle {
             position: absolute;
-            bottom: 4px; /* Starts at BOTTOM */
+            bottom: 4px;
             left: 4px; 
-            width: 78px; /* Wider handle */
+            width: 78px;
             height: 78px;
             background: linear-gradient(135deg, var(--accent-purple), #5537d9);
             border-radius: 50%;
@@ -162,28 +186,10 @@
             align-items: center;
             justify-content: center;
             cursor: grab;
-            transition: bottom 0.1s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            transition: bottom 0.1s ease;
             box-shadow: 0 -4px 20px rgba(107, 70, 255, 0.5);
             z-index: 10;
-        }
-        
-        /* EXPANDED HIT AREA (Invisible) */
-        /* This pseudo-element makes the touch target huge */
-        .swipe-handle::before {
-            content: '';
-            position: absolute;
-            top: -30px;
-            bottom: -30px;
-            left: -30px;
-            right: -30px;
-            background: transparent;
-            border-radius: 50%;
-            z-index: -1;
-        }
-
-        .swipe-handle:active {
-            cursor: grabbing;
-            transform: scale(1.1); /* Enlarge slightly on touch */
+            pointer-events: none; /* Let the container handle the events! */
         }
 
         .swipe-arrows {
@@ -307,14 +313,13 @@
     </div>
 
     <script>
-        // Pass tracking params to iframe
         const currentParams = window.location.search;
         const iframe = document.getElementById('lander-frame');
         if (currentParams) {
             iframe.src = 'lander.html' + currentParams;
         }
 
-        // Logic for Vertical SWIPE UP
+        // Logic for "Hit Box" Vertical Swipe
         const swipeContainer = document.getElementById('swipe-container');
         const swipeHandle = document.getElementById('swipe-handle');
         const swipeTrack = document.getElementById('swipe-track');
@@ -324,14 +329,10 @@
         
         let isDragging = false;
         let startY = 0;
-        let currentY = 0; // Represents distance moved UP
-        let handleBottomY = 4; // Bottom padding
-        
-        // Calculate max travel distance
-        // Container Height (300) - Handle Height (78) - Padding (4)
+        let currentY = 0; 
+        let handleBottomY = 4;
         let maxY = 300 - 78 - 4; 
-        const threshold = 0.75; // 75% swipe required to unlock
-        
+        const threshold = 0.75;
         let hasMoved = false;
 
         function getEventY(e) {
@@ -339,27 +340,27 @@
         }
 
         function startDrag(e) {
-            // Only prevent default if not clicking a link (safety)
-            if (!e.target.closest('a')) {
-                 e.preventDefault();
-            }
+            // Prevent default unless clicking a link
+            if (!e.target.closest('a')) e.preventDefault();
             
             isDragging = true;
             hasMoved = false;
+            
+            // Capture start position
             startY = getEventY(e);
             
-            // Instant response
+            // Remove transitions for instant dragging
             swipeHandle.style.transition = 'none';
             swipeTrack.style.transition = 'none';
         }
 
         function doDrag(e) {
             if (!isDragging) return;
-            e.preventDefault(); // Stop browser scrolling
+            e.preventDefault(); 
             
             const y = getEventY(e);
             
-            // Logic for UP swipe: startY - currentY (positive means moving UP)
+            // Logic: Calculate distance moved relative to start touch
             const diff = startY - y;
             
             if (Math.abs(diff) > 5) {
@@ -367,17 +368,12 @@
             }
             
             // Constrain movement (0 to maxY)
-            // If diff is negative (moving down), it stays at 0
+            // Even if they touch the top of the container, dragging UP increases 'diff'
             currentY = Math.max(0, Math.min(diff, maxY));
             
-            // Update CSS
-            // Handle moves UP from bottom
             swipeHandle.style.bottom = (handleBottomY + currentY) + 'px';
+            swipeTrack.style.height = (86 + currentY) + 'px';
             
-            // Track grows height
-            swipeTrack.style.height = (86 + currentY) + 'px'; // 86 = initial height
-            
-            // Fade text
             const progress = currentY / maxY;
             swipeText.style.opacity = 0.6 - progress;
         }
@@ -386,7 +382,6 @@
             if (!isDragging) return;
             isDragging = false;
             
-            // Restore smooth transition
             swipeHandle.style.transition = 'bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             swipeTrack.style.transition = 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             
@@ -395,12 +390,9 @@
             if (hasMoved && progress >= threshold) {
                 unlockSuccess();
             } else {
-                // If they just clicked (hasMoved is false) or didn't swipe far enough -> Reset
-                
-                // Add shake effect for feedback "You need to swipe!"
+                // Shake if clicked but not swiped
                 swipeContainer.classList.add('shake');
                 setTimeout(() => swipeContainer.classList.remove('shake'), 500);
-                
                 resetHandle();
             }
         }
@@ -430,12 +422,10 @@
             }, 500);
         }
 
-        // Attach events to the CONTAINER, not just the handle
-        // This effectively makes the "Hit Box" the entire slider track area
+        // Attach listeners to the container (which now includes the invisible 40px padding)
         swipeContainer.addEventListener('mousedown', startDrag);
         swipeContainer.addEventListener('touchstart', startDrag, { passive: false });
 
-        // Document level listeners for drag and release
         document.addEventListener('mousemove', doDrag);
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('touchmove', doDrag, { passive: false });
